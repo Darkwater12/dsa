@@ -1,0 +1,119 @@
+Consider a scenario for Hospital to cater services to different kinds of patients as Serious
+(top priority), b) non-serious (medium priority), c) General Checkup (Least priority).
+Implement the priority queue to cater services to the patients.
+
+
+#include <iostream>
+#include <queue>
+#include <string>
+Using namespace sdt;
+struct Patient {
+ string name;
+ int priority;
+ bool operator<(const Patient& other) const {
+ return priority > other.priority; // Higher priority patients are served first
+ }
+};
+int main() {
+ priority_queue<Patient> hospitalQueue;
+ int numPatients;
+ cout << "Enter the number of patients: ";
+ cin >> numPatients;
+ cin.ignore(); // Clear the newline character from the input buffer
+ for (int i = 0; i < numPatients; ++i) {
+ Patient patient;
+ cout << "Enter patient's name: ";
+ getline(cin, patient.name);
+ cout << "Enter patient's priority (1: Serious, 2: Non-serious, 3: General Checkup): ";
+ cin >> patient.priority;
+ cin.ignore(); // Add this line to clear the newline character after reading the priority
+ hospitalQueue.push(patient);
+ }
+ cout << "\nPatients being served:\n";
+ while (!hospitalQueue.empty()) {
+ Patient servedPatient = hospitalQueue.top();
+ hospitalQueue.pop();
+ cout << "Serving patient: " << servedPatient.name << endl;
+ }
+ return 0;
+}
+
+
+Problem Statement:
+Consider a scenario for Hospital to cater services to different kinds of patients as Serious (top priority),
+b) non-serious (medium priority), c) General Checkup (Least priority). Implement the priority queue to
+cater services to the patients
+Objectives:
+1. To understand the concept of priority Queue.
+2. How data structures Queue is represented as an ADT.
+Software Requirements : g++ / gcc compiler- / 64 bit Fedora, eclipse IDE
+Input : Name of patients & category of patient
+Output : Priority queue cater services to the patients based on priorities.
+Theory:
+Priority queue is an abstract data type in computer programming that supports the following three
+operations:
+insertWithPriority: add an element to the queue with an associated priority
+getNext: remove the element from the queue that has the highest priority, and return it (also known
+as "PopElement(Off)", or "GetMinimum")
+peekAtNext (optional): look at the element with highest priority without removing it.
+The rule that determines who goes next is called a queueing discipline. The simplest queueing discipline
+is called FIFO, for "first-in-first-out." The most general queueing discipline is priority queueing, in which
+each customer is assigned a priority, and the customer with the highest priority goes first, regardless of
+the order of arrival. The reason I say this is the most general discipline is that the priority can be based
+on anything: what time a flight leaves, how many groceries the customer has, or how important the
+customer is. Of course, not all queueing disciplines are "fair," but fairness is in the eye of the beholder.
+The Queue ADT and the Priority Queue ADT have the same set of operations and their interfaces are the
+same. The difference is in the semantics of the operations: A Queue uses the FIFO policy, and a Priority
+Queue (as the name suggests) uses the priority queueing policy. As with most ADTs, there are a number
+of ways to implement queues Since a queue is a collection of items, we can use any of the basic
+mechanisms for storing collections: arrays, lists, or vectors. Our choice among them will be based in part
+on their performance--- how long it takes to perform the operations we want to perform--- and partly
+on ease of implementation.
+ALGORITHM:
+ALGORITHM:
+Define structure for Queue (Priority, Patient Info, Next Pointer).
+Empty Queue:
+Return True if Queue is Empty else False.
+isEmpty (Front)
+Front is pointer of structure, which is first element of Queue.
+Step 1: If Front = = NULL
+Step 2: Return 1
+Step 3: Return 0
+Insert Function:
+Insert Patient in Queue with respect to the Priority.
+Front is pointer variable of type Queue, which is 1st node of Queue.
+Patient is a pointer variable of type Queue, which hold the information about new patient.
+Insert (Front, Queue)
+Step 1: If Front = = NULL //Queue Empty
+Then Front = Patient;
+Step 2: Else if Patient->Priority > Front->Priority Then
+i) Patient->Next = Front;
+ii) Front=Patient;
+Step 3: Else
+A) Temp=Front;
+B) Do Steps a while Temp! = NULL and Patient->Priority <= Temp->Next->Priority
+a) Temp=Temp->Next;
+c) Patient->Next = Temp->Next;
+Temp->Next = Patient;
+Step 4: Stop
+Delete Patient details from Queue after patient get treatment:
+Front is pointer variable of type Queue, which is 1st node of Queue.
+Delete Node from Front.
+Delete (Front)
+Step 1: Temp = Front;
+Step 2: Front = Front->Next;
+Step 3: return Temp
+Display Queue Front:
+Front is pointer variable of type Queue, which is 1st node of Queue.
+Display (Front)
+Step 1: Temp = Front;
+Step 2: Do Steps while Temp! = NULL
+a) Display Temp Data
+b) If Priority 1 Then ¯General Checkup‖;
+Else If Priority 2 Then Display ¯ Non-serious"; Else
+If Priority 3 Then Display "Serious"
+Else Display "Unknown";
+c)Temp = Temp->Next;
+Step 3: Stop.
+Conclusion: After successful implementation of this assignment, we understood the priority queue as
+ADT.

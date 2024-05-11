@@ -1,0 +1,214 @@
+Beginning with an empty binary search tree, Construct binary search tree by inserting the
+values in the order given. After constructing a binary tree -
+i. Insert new node
+ii. Find number of nodes in longest path from root
+iii. Minimum data value found in the tree
+iv. Change a tree so that the roles of the left and right pointers are swapped at every
+node
+v. Search a value
+
+
+#include<iostream>
+using namespace std;
+
+struct Bstnode {
+    int data;
+    Bstnode *left = NULL;
+    Bstnode *right = NULL;
+};
+
+class Btree {
+    int n, x;
+public:
+    Bstnode *root;
+    
+    Btree() {
+        root = NULL;
+    }
+    
+    Bstnode *GetNewNode(int d) {
+        Bstnode *p = new Bstnode();
+        p->data = d;
+        return p;
+    }
+    
+    Bstnode *insert(Bstnode *t, int d) {
+        if(!t)
+            t = GetNewNode(d);
+        else if(t->data > d)
+            t->left = insert(t->left, d);
+        else 
+            t->right = insert(t->right, d);
+        return t;
+    }
+    
+    void input() {
+        cout << "ENTER NUMBER OF ELEMENTS IN THE BST : ";
+        cin >> n;
+        for(int i = 0; i < n; i++) {
+            cout << "NUMBER = ";
+            cin >> x;
+            root = insert(root, x);
+        }
+    }
+    
+    int search(Bstnode *t, int d) {
+        if(t) {
+            if(t->data == d)
+                return 1;
+            if(d < t->data)
+                return search(t->left, d);
+            return search(t->right, d);
+        }
+        return 0;
+    }
+    
+    void minvalue(Bstnode *t) {
+        while(t->left)
+            t = t->left;
+        cout << "MINIMUM VALUE = " << t->data << endl;
+    }
+    
+    void mirror(Bstnode *t) {
+        if(t) {
+            Bstnode *p;
+            mirror(t->left);
+            mirror(t->right);
+            p = t->left;
+            t->left = t->right;
+            t->right = p;
+        }
+    }
+    
+    void display() {
+        cout << endl << "--- INORDER TRAVERSAL ---" << endl;
+        inorder(root);
+        cout << endl << endl << "--- POSTORDER TRAVERSAL ---" << endl;
+        postorder(root);
+        cout << endl << endl << "--- PREORDER TRAVERSAL ---" << endl;
+        preorder(root);
+        cout << endl;
+    }
+    
+    void inorder(Bstnode *t) {
+        if(t) {
+            inorder(t->left);
+            cout << t->data << " ";
+            inorder(t->right);
+        }
+    }
+    
+    void postorder(Bstnode *t) {
+        if(t) {
+            postorder(t->left);
+            postorder(t->right);
+            cout << t->data << " ";
+        }
+    }
+    
+    void preorder(Bstnode *t) {
+        if(t) {
+            cout << t->data << " ";
+            preorder(t->left);
+            preorder(t->right);
+        }
+    }
+    
+    int depth(Bstnode *t) {
+        if(!t)
+            return 0;
+        return max(depth(t->left), depth(t->right)) + 1;
+    }
+};
+
+int main() {
+    Btree o;
+    o.input();
+    o.display();
+    int a = 0;
+    a = o.search(o.root, 10);
+    if(!a)
+        cout << "ELEMENT NOT FOUND" << endl;
+    else 
+        cout << "ELEMENT FOUND" << endl << endl << a << endl;
+    o.minvalue(o.root);
+    o.mirror(o.root);
+    o.inorder(o.root);
+    cout << endl << o.depth(o.root);
+    return 0;
+}
+
+
+
+
+
+
+
+Problem Statement:
+Beginning with an empty binary search tree, Construct binary search tree by inserting the values in the
+order given. After constructing a binary tree - i. Insert new node ii. Find number of nodes in longest path
+iii. Minimum data value found in the tree iv. Change a tree so that the roles of the left and right pointers
+are swapped at every node v. Search a value
+Objectives:
+1. To understand concept of Tree & Binary Tree.
+2. To analyze the working of various Tree operations
+Software Requirements g++ / gcc compiler- / 64 bit Fedora, eclipse IDE
+Input: Data with distinct key values
+Output: Binary Search tree
+Theory:
+Tree
+Tree represents the nodes connected by edges also a class of graphs that is acyclic is termed as
+trees. Let us now discuss an important class of graphs called trees and its associated terminology.
+Trees are useful in describing any structure that involves hierarchy. Familiar examples of such
+structures are family trees, the hierarchy of positions in an organization, and so on.
+Binary Tree
+A binary tree is made of nodes, where each node contains a "left" reference, a
+"right" reference, and a data element. The topmost node in the tree is called the root.
+Every node (excluding a root) in a tree is connected by a directed edge from exactly one other
+node. This node is called a parent. On the other hand, each node can be connected to arbitrary number
+of nodes, called children. Nodes with no children are called leaves, or external nodes. Nodes which are
+not leaves are called internal nodes. Nodes with the same parent are called siblings.
+Insert Operation
+The very first insertion creates the tree. Afterwards, whenever an element is to be inserted, first locate
+its proper location. Start searching from the root node, then if the data is less than the key value, search
+for the empty location in the left subtree and insert the data. Otherwise, search for the empty location
+in the right subtree and insert the data
+Algorithm to insert a node :
+Step 1 - Search for the node whose child node is to be inserted. This is a node at some level i, and a node
+is to be inserted at the level i +1 as either its left child or right child. This is the node after which the
+insertion is to be made.
+Step 2 - Link a new node to the node that becomes its parent node, that is, either the Lchild or the
+Rchild
+Deletion
+Case 1. Delete a Leaf Node in BST
+Case 2. Delete a Node with Single Child in BST
+Deleting a single child node is also simple in BST. Copy the child to the node and delete the node.
+Case 3. Delete a Node with Both Children in BST
+Deleting a node with both children is not so simple. Here we have to delete the node is such a way,
+that the resulting tree follows the properties of a BST.
+The trick is to find the inorder successor of the node. Copy contents of the inorder successor to the
+node, and delete the inorder successor.
+Algorithm
+Delete (TREE, ITEM)
+Step 1: IF TREE = NULL
+ Write "item not found in the tree" ELSE IF ITEM < TREE -> DATA
+ Delete(TREE->LEFT, ITEM)
+ ELSE IF ITEM > TREE -> DATA
+ Delete(TREE -> RIGHT, ITEM)
+ ELSE IF TREE -> LEFT AND TREE -> RIGHT
+ SET TEMP = findLargestNode(TREE -> LEFT)
+ SET TREE -> DATA = TEMP -> DATA
+ Delete(TREE -> LEFT, TEMP -> DATA)
+ ELSE
+ SET TEMP = TREE
+ IF TREE -> LEFT = NULL AND TREE -> RIGHT = NULL
+ SET TREE = NULL
+ ELSE IF TREE -> LEFT != NULL
+ SET TREE = TREE -> LEFT
+ ELSE
+ SET TREE = TREE -> RIGHT
+ [END OF IF]
+ FREE TEMP
+[END OF IF]
+Step 2: END
+Conclusion : Thus we have studied the implementation of various Binary tree operation

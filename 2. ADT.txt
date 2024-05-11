@@ -1,0 +1,203 @@
+Implement all the functions of a dictionary (ADT) using hashing and handle collisions using chaining
+with / without replacement. Data: Set of (key, value) pairs, Keys are mapped to values, Keys must be
+comparable, Keys must be unique Standard Operations: Insert(key, value), Find(key), Delete(key)
+
+
+class HashTable:
+    def __init__(self, size=10):
+        self.size = size
+        self.buckets = [[] for _ in range(self.size)]
+
+    def hash(self, key):
+        return hash(key) % self.size
+
+    def insert(self, key, value):
+        index = self.hash(key)
+        for pair in self.buckets[index]:
+            if pair[0] == key:
+                pair[1] = value
+                return
+        self.buckets[index].append([key, value])
+
+    def find(self, key):
+        index = self.hash(key)
+        for pair in self.buckets[index]:
+            if pair[0] == key:
+                return pair[1]
+        raise KeyError(key)
+
+    def delete(self, key):
+        index = self.hash(key)
+        for i, pair in enumerate(self.buckets[index]):
+            if pair[0] == key:
+                del self.buckets[index][i]
+                return
+        raise KeyError(key)
+
+    def print_table(self):
+        for bucket in self.buckets:
+            for pair in bucket:
+                print(f"Key: {pair[0]}, Value: {pair[1]}")
+
+# Take input from the user
+size = int(input("Enter the size of the hash table: "))
+hash_table = HashTable(size)
+
+while True:
+    choice = input("Choose an option:\n1. Insert\n2. Find\n3. Delete\n4. Print\n5. Exit\nChoose the option: ")
+    if choice == '1':
+        key = input("Enter the key: ")
+        value = input("Enter the value: ")
+        hash_table.insert(key, value)
+    elif choice == '2':
+        key = input("Enter the key: ")
+        try:
+            value = hash_table.find(key)
+            print(f"Value for key {key}: {value}")
+        except KeyError:
+            print(f"Key {key} not found.")
+    elif choice == '3':
+        key = input("Enter the key: ")
+        try:
+            hash_table.delete(key)
+            print(f"Key {key} deleted.")
+        except KeyError:
+            print(f"Key {key} not found.")
+    elif choice == '4':
+        hash_table.print_table()
+    elif choice == '5':
+        break
+    else:
+        print("Invalid choice.")
+
+
+
+
+
+
+Problem Statement: Implement all the functions of a dictionary (ADT) using hashing and handle
+collisions using chaining with / without replacement.
+Data: Set of (key, value) pairs, Keys are mapped to values, Keys must be comparable, Keys
+must be unique Standard Operations: Insert(key, value), Find(key), Delete(key)
+Objectives:
+1. To understand Dictionary (ADT)
+2. To understand concept of hashing
+3. To understand concept & features like searching using hash function
+Software Requirements: Open Source Python
+Input: No. of. elements with key and value pair
+Output: Create dictionary using hash table and search the elements in table.
+Theory:
+Dictionary ADT
+Dictionary (map, association list) is a data structure, which is generally an association of
+unique keys with some values. One may bind a value to a key, delete a key (and naturally an
+associated value) and lookup for a value by the key. Values are not required to be unique. Simple
+usage example is an explanatory dictionary. In the example, words are keys and explanations are
+values.
+Dictionary Operations
+Dictionary create()
+creates empty dictionary
+boolean isEmpty(Dictionary d)
+tells whether the dictionary d is empty
+put(Dictionary d, Key k, Value v)
+associates key k with a value v; if key k already presents in the dictionary old value is
+replaced by v
+Value get(Dictionary d, Key k)
+returns a value, associated with key kor null, if dictionary contains no such key
+remove(Dictionary d, Key k)
+removes key k and associated value
+destroy(Dictionary d)
+destroys dictionary d
+Hash Table is a data structure which stores data in an associative manner. In a hash table,
+data is stored in an array format, where each data value has its own unique index value. Access
+of data becomes very fast if we know the index of the desired data.
+Thus, it becomes a data structure in which insertion and search operations are very fast
+irrespective of the size of the data. Hash Table uses an array as a storage medium and uses hash
+technique to generate an index where an element is to be inserted or is to be located from.
+Hashing
+Hashing is a technique to convert a range of key values into a range of indexes of an
+array. We're going to use modulo operator to get a range of key values. Consider an example
+of hash table of size 20, and the following items are to be stored. Item are in the (key,value)
+format.
+Basic Operations of hash table
+Following are the basic primary operations of a hash table.
+Search − Searches an element in a hash table.
+Insert − inserts an element in a hash table.
+delete − Deletes an element from a hash table.
+1. DataItem
+Define a data item having some data and key, based on which the search is to be conducted in a
+hash table.
+struct DataItem {
+int data;
+int key;
+};
+2. Hash Method
+Define a hashing method to compute the hash code of the key of the data item.
+int hashCode(int key){
+return key % SIZE;
+}
+3. Search Operation
+Whenever an element is to be searched, compute the hash code of the key passed and locate the
+element using that hash code as index in the array. Use linear probing to get the element ahead if the
+element is not found at the computed hash code
+Example
+struct DataItem *search(int key) {
+//get the hash
+int hashIndex = hashCode(key);
+//move in array until an empty
+while(hashArray[hashIndex] != NULL) {
+if(hashArray[hashIndex]->key == key)
+return hashArray[hashIndex];
+//go to next cell
+++hashIndex;
+//wrap around the table
+hashIndex %= SIZE;
+}
+return NULL;
+}
+4. Insert Operation
+Whenever an element is to be inserted, compute the hash code of the key passed and locate the index
+using that hash code as an index in the array. Use linear probing for empty location, if an element is
+found at the computed hash code.
+Example
+void insert(int key,int data) {
+struct DataItem *item = (struct DataItem*) malloc(sizeof(struct DataItem));
+item->data = data;
+item->key = key;
+//get the hash
+int hashIndex = hashCode(key);
+//move in array until an empty or deleted cell
+while(hashArray[hashIndex] != NULL && hashArray[hashIndex]->key != -1) {
+//go to next cell
+++hashIndex;
+//wrap around the table
+hashIndex %= SIZE;
+}
+hashArray[hashIndex] = item;
+}
+5. Delete Operation
+Whenever an element is to be deleted, compute the hash code of the key passed and locate the
+index using that hash code as an index in the array. Use linear probing to get the element ahead if an
+element is not found at the computed hash code. When found, store a dummy item there to keep the
+performance of the hash table intact.
+Example
+struct DataItem* delete(struct DataItem* item) {
+int key = item->key;
+//get the hash
+int hashIndex = hashCode(key);
+//move in array until an empty
+while(hashArray[hashIndex] !=NULL) {
+if(hashArray[hashIndex]->key == key) {
+struct DataItem* temp = hashArray[hashIndex];
+//assign a dummy item at deleted position
+hashArray[hashIndex] = dummyItem;
+return temp;
+}
+//go to next cell
+++hashIndex;
+//wrap around the table
+hashIndex %= SIZE;
+}
+return NULL;
+}
+Conclusion: This program gives us the knowledge of dictionary(ADT)
+

@@ -1,0 +1,169 @@
+Department maintains a student information. The file contains roll number, name,
+division and address. Allow user to add, delete information of student. Display
+information of particular employee. If record of student does not exist an appropriate
+message is displayed. If it is, then the system displays the student details. Use sequential
+file to main the data.
+
+
+#include<iostream>
+#include<fstream>
+#include<iomanip>
+using namespace std;
+void addStudent(){
+ ofstream f("db.txt", ios::app);
+ string roll_no, name, div, address;
+ cout<<"--- ADD STUDENT IN DATABASE ---"<<endl;
+ cout<<"Enter Student Roll No : ";
+ cin>>roll_no;
+ cout<<"\nEnter Student Name : ";
+ cin>>name;
+ cout<<"\nEnter Sudent Division : ";
+ cin>>div;
+ cout<<"\nEnter Student Address : ";
+ cin>>address;
+ cout<<endl;
+ f<<left<<setw(20)<<roll_no<<setw(20)<<name <<setw(20)<< div <<setw(20)<<address<<endl;
+ cout<<"Student Added Successfully.\n";
+ f.close();
+}
+void deleteStudent(){
+ ifstream f("db.txt");
+ string line;
+ string roll_no;
+ cout<<"Enter Student Roll No To Delet : ";
+ cin>>roll_no;
+ string fileData;
+ while(getline(f,line)){
+ if(line.find(roll_no) == string::npos){
+ fileData+=line;
+ fileData+="\n";
+ }
+ }
+ f.close();
+ ofstream f1("db.txt", ios::out);
+ f1<<fileData;
+ f1.close();
+}
+void searchStudent(){
+ ifstream f("db.txt");
+ string line;
+ string roll_no;
+ cout<<"Enter Student Roll No To Search : ";
+ cin>>roll_no;
+ bool found = false;
+ while(getline(f,line)){
+ if(line.find(roll_no) != string::npos){
+ cout<<"Student Details: "<<endl;
+ cout<<"\n"<<line <<endl;
+ found =true;
+ break;
+ }
+ }
+ f.close();
+ if(!found){
+ cout<<"Sorry, Not found"<<endl;
+ }
+}
+void displayData(){
+ ifstream f("db.txt");
+ string line;
+ cout<<"\nDisplaying Data :- "<<endl;
+ while(getline(f,line)){
+ cout<<"\n"<<line<<endl;
+ }
+ f.close();
+}
+int main(){
+ ofstream f("db.txt", ios::out);
+ f<<left<<setw(20) << "Roll No" << setw(20) << "Name" << setw(20) << "Divison" << setw(20)
+<<"Address"<<endl;
+ f.close();
+ int choice;
+ while(choice != -1){
+ cout<<"\n--------- M E N U -----------"<<endl;
+ cout<<"1. Add Student.";
+ cout<<"\n2. Delete Student.";
+ cout<<"\n3. Search Student. ";
+ cout<<"\n4. Display Data.";
+ cout<<"\n5. Exit. "<<endl;
+ cout<<"-------------------------------"<<endl;
+ cout<<"Enter Your Choice: ";
+ cin>>choice;
+ cout<<endl;
+ switch(choice){
+ case 1:
+ addStudent();
+ break;
+ case 2:
+ deleteStudent();
+ break;
+ case 3:
+ searchStudent();
+ break;
+ case 4:
+ displayData();
+ break;
+ case 5:
+ return 0;
+ break;
+ default:
+ cout<<"Please ReEnter Your Choice: ";
+ break;
+ }
+ }
+}
+
+
+
+
+
+Problem Statement: Department maintains a student information. The file contains roll number, name,
+division and address. Allow user to add, delete information of student. Display information of particular
+employee. If record of student does not exist an appropriate message is displayed. If it is, then the
+system displays the student details. Use sequential file to main the data.
+Objectives:
+1. To understand concept of file organization in data structure.
+2. To understand concept & features of sequential file organization.
+Software Requirements : g++ / gcc compiler- / 64 bit Fedora, eclipse IDE
+Input : Details of student like roll no, name, address division etc
+Output If record of student does not exist an appropriate message is displayed otherwise the student
+details are displayed.
+Theory:
+File organization refers to the relationship of the key of the record to the physical location of that record
+in the computer file. File organization may be either physical file or a logical file.
+A physical file is a physical unit, such as magnetic tape or a disk. A logical file on the other hand is a
+complete set of records for a specific application or purpose. A logical file may occupy a part of physical
+file or may extend over more than one physical file.
+There are various methods of file organizations. These methods may be efficient for certain types of
+access/selection meanwhile it will turn inefficient for other selections. Hence it is up to the programmer
+to decide the best suited file organization method depending on his requirement.
+Some of the file organizations are
+1. Sequential File Organization
+2. Heap File Organization
+3. Hash/Direct File Organization
+4. Indexed Sequential Access Method
+5. B+ Tree File Organization
+6. Cluster File Organization
+Sequential File Organization: It is one of the simple methods of file organization. Here each file/records
+are stored one after the other in a sequential manner. This can be achieved in two ways:
+Records are stored one after the other as they are inserted into the tables. This method is called pile
+file method. When a new record is inserted, it is placed at the end of the file. In the case of any
+modification or deletion of record, the record will be searched in the memory blocks. Once it is found, it
+will be marked for deleting and new block of record is entered.
+In the diagram above, R1, R2, R3 etc are the records. They contain all the attribute of a row. i.e.; when
+we say student record, it will have his id, name, address, course, DOB etc. Similarly R1, R2, R3 etc can be
+considered as one full set of attributes
+In the second method, records are sorted (either ascending or descending) each time they are inserted
+into the system. This method is called sorted file method. Sorting of records may be based on the
+primary key or on any other columns. Whenever a new record is inserted, it will be inserted at the end
+of the file and then it will sort – ascending or descending based on key value and placed at the correct
+position. In the case of update, it will update the record and then sort the file to place the updated
+record in the right place. Same is the case with delete.
+Advantages: • Simple to understand. • Easy to maintain and organize • Loading a record requires only
+the record key. • Relatively inexpensive I/O media and devices can be used. • Easy to reconstruct the
+files. • The proportion of file records to be processed is high.
+Disadvantages: • Entire file must be processed, to get specific information. • Very low activity rate
+stored. • Transactions must be stored and placed in sequence prior to processing. • Data redundancy is
+high, as same data can be stored at different places with different keys. • Impossible to handle random
+enquiries.
+Conclusion: This program gives us the knowledge sequential file organization.

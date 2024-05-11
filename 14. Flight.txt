@@ -1,0 +1,159 @@
+There are flight paths between cities. If there is a flight between city A and city B then
+there is an edge between the cities. The cost of the edge can be the time that flight take
+to reach city B from A, or the amount of fuel used for the journey. Represent this as a
+graph. The node can be represented by airport name or name of the city. Use adjacency
+list representation of the graph or use adjacency matrix representation of the graph.
+Check whether the graph is connected or not. Justify the storage representation used
+
+#include <iostream>
+#include <queue>
+using namespace std;
+
+int adj_mat[50][50] = {0, 0};
+int visited[50] = {0};
+
+void dfs(int s, int n, string arr[])
+{
+visited[s] = 1;
+cout << arr[s] << " ";
+for (int i = 0; i < n; i++)
+{
+if (adj_mat[s][i] && !visited[i])
+dfs(i, n, arr);
+}
+}
+
+void bfs(int s, int n, string arr[])
+{
+bool visited[n];
+for (int i = 0; i < n; i++)
+visited[i] = false;
+int v;
+queue<int> bfsq;
+if (!visited[s])
+{
+cout << arr[s] << " ";
+
+bfsq.push(s);
+visited[s] = true;
+while (!bfsq.empty())
+{
+v = bfsq.front();
+for (int i = 0; i < n; i++)
+{
+if (adj_mat[v][i] && !visited[i])
+{
+cout << arr[i] << " ";
+visited[i] = true;
+bfsq.push(i);
+}
+}
+bfsq.pop();
+}
+}
+}
+
+int main()
+{
+cout << "Enter no. of cities: ";
+int n, u;
+cin >> n;
+string cities[n];
+for (int i = 0; i < n; i++)
+{
+cout << "Enter city #" << i << " (Airport Code): ";
+cin >> cities[i];
+}
+
+cout << "\nYour cities are: " << endl;
+for (int i = 0; i < n; i++)
+cout << "city #" << i << ": " << cities[i] << endl;
+for (int i = 0; i < n; i++)
+{
+for (int j = i + 1; j < n; j++)
+{
+cout << "Enter distance between " << cities[i] << " and " << cities[j] << " : ";
+cin >> adj_mat[i][j];
+adj_mat[j][i] = adj_mat[i][j];
+}
+}
+cout << endl;
+for (int i = 0; i < n; i++)
+cout << "\t" << cities[i] << "\t";
+for (int i = 0; i < n; i++)
+{
+cout << "\n"
+<< cities[i];
+for (int j = 0; j < n; j++)
+cout << "\t" << adj_mat[i][j] << "\t";
+cout << endl;
+}
+cout << "Enter Starting Vertex: ";
+cin >> u;
+cout << "DFS: ";
+dfs(u, n, cities);
+cout << endl;
+cout << "BFS: ";
+
+bfs(u, n, cities);
+return 0;
+}
+
+
+
+
+
+Problem Statement:
+There are flight paths between cities. If there is a flight between city A and city B then there is an edge
+between the cities. The cost of the edge can be the time that flight take to reach city B from A, or the
+amount of fuel used for the journey. Represent this as a graph. The node can be represented by airport
+name or name of the city. Use adjacency list representation of the graph or use adjacency matrix
+representation of the graph. Check whether the graph is connected or not. Justify the storage
+representation used.
+Objectives:
+1. To understand concept of Graph data structure
+2. To understand concept of representation of graph.
+Software Requirements g++ / gcc compiler- / 64 bit Fedora, eclipse IDE
+Input : 1.Number of cities.
+2.Time required to travel from one city to another
+Output Create Adjacency matrix to represent path between various cities.
+Theory:
+Graphs are the most general data structure. They are also commonly used data structures.
+Graph definitions:
+A non-linear data structure consisting of nodes and links between nodes.
+Undirected graph definition:
+An undirected graph is a set of nodes and a set of links between the nodes.
+Each node is called a vertex, each link is called an edge, and each edge connects two
+vertices.
+The order of the two connected vertices is unimportant.
+An undirected graph is a finite set of vertices together with a finite set of edges. Both sets
+might be empty, which is called the empty graph.
+Graph Implementation:
+Different kinds of graphs require different kinds of implementations, but the fundamental concepts of
+all graph implementations are similar. We'll look at several representations for one particular kind of
+graph: directed graphs in which loops are allowed.
+Representing Graphs with an Adjacency Matrix
+Fig: Graph and adjacency matrix
+Definition:
+An adjacency matrix is a square grid of true/false values that represent the edges of a
+graph.
+If the graph contains n vertices, then the grid contains n rows and n columns.
+For two vertex numbers i and j, the component at row i and column j is true if there is an edge from
+vertex i to vertex j; otherwise, the component is false.
+We can use a two-dimensional array to store an adjacency matrix:
+boolean[][] adjacent = new boolean[4][4];
+Once the adjacency matrix has been set, an application can examine locations of the matrix to
+determine which edges are present and which are missing.
+Representing Graphs with Edge Lists
+Fig: Graph and adjacency list for each node
+Definition:
+A directed graph with n vertices can be represented by n different linked lists.
+List number i provides the connections for vertex i.
+For each entry j in list number i, there is an edge from i to j.
+Loops and multiple edges could be allowed.
+Representing Graphs with Edge Sets
+To represent a graph with n vertices, we can declare an array of n sets of integers. For example:
+IntSet[] connections = new IntSet[10]; // 10 vertices
+A set such as connections[i] contains the vertex numbers of all the vertices to which vertex i is
+connected.
+Conclusion: This program gives us the knowledge of adjacency matrix graph

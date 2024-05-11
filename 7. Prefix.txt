@@ -1,0 +1,134 @@
+Construct an expression tree from the given prefix expression eg. +--a*bc/def and
+traverse it using postordertraversal(non recursive) and then delete the entire tree. 
+
+
+#include <iostream>
+#include <cstring>
+using namespace std;
+
+struct Node {
+    char data;
+    Node *left, *right;
+};
+
+class Tree {
+    char prefix[20];
+public:
+    Node *top;
+    void expression(char[]);
+    void display(Node *);
+    void non_rec_postorder(Node *);
+    void del(Node *);
+};
+
+class Stack {
+    Node *data[30];
+    int top;
+public:
+    Stack() { top = -1; }
+    int empty() { return top == -1; }
+    void push(Node *p) { data[++top] = p; }
+    Node *pop() { return data[top--]; }
+};
+
+void Tree::expression(char prefix[]) {
+    Stack s;
+    Node *t1, *t2;
+    int len, i;
+    len = strlen(prefix);
+    for (i = len - 1; i >= 0; i--) {
+        top = new Node;
+        top->left = top->right = NULL;
+        if (isalpha(prefix[i])) {
+            top->data = prefix[i];
+            s.push(top);
+        } else if (prefix[i] == '+' || prefix[i] == '*' || prefix[i] == '-' || prefix[i] == '/') {
+            t2 = s.pop();
+            t1 = s.pop();
+            top->data = prefix[i];
+            top->left = t2;
+            top->right = t1;
+            s.push(top);
+        }
+    }
+    top = s.pop();
+}
+
+void Tree::display(Node *root) {
+    if (root) {
+        cout << root->data;
+        display(root->left);
+        display(root->right);
+    }
+}
+
+void Tree::non_rec_postorder(Node *top) {
+    Stack s1, s2;
+    Node *T = top;
+    s1.push(T);
+    while (!s1.empty()) {
+        T = s1.pop();
+        s2.push(T);
+        if (T->left) s1.push(T->left);
+        if (T->right) s1.push(T->right);
+    }
+    while (!s2.empty()) {
+        top = s2.pop();
+        cout << top->data;
+    }
+}
+
+void Tree::del(Node *node) {
+    if (!node) return;
+    del(node->left);
+    del(node->right);
+    cout << "\nDeleting node : " << node->data << endl;
+    delete node;
+}
+
+int main() {
+    char expr[20];
+    Tree t;
+    cout << "Enter prefix Expression : ";
+    cin >> expr;
+    cout << expr;
+    t.expression(expr);
+    t.non_rec_postorder(t.top);
+    t.del(t.top);
+}
+
+
+
+
+
+
+Problem Statement:
+Construct an expression tree from the given prefix expression eg. +--a*bc/def and traverse it using
+postordertraversal (non recursive)
+Objectives:
+1. To understand concept of Expression Tree.
+2. To analyze the working of various Tree traversals
+Software Requirements g++ / gcc compiler- / 64 bit Fedora, eclipse IDE
+Input : Set of operators and operands for a given expression
+Output: Expression tree with post order traversal
+Theory:
+Expression Tree: The expression tree is a binary tree in which each internal node corresponds to the
+operator and each leaf node corresponds to the operand
+Example: expression tree for 3 + ((5+9)*2) would be:
+Construction of Expression Tree:
+Now For constructing an expression tree we use a stack. We loop through input expression and do the
+following for every character.
+1. If a character is an operand push that into the stack
+2. If a character is an operator pop two values from the stack make them its child and push
+the current node again.
+In the end, the only element of the stack will be the root of an expression tree.
+There are three different types of depth-first traversals, :
+PreOrder traversal - visit the parent first and then left and right children;
+InOrder traversal - visit the left child, then the parent and the right child;
+PostOrder traversal - visit left child, then the right child and then the parent
+Algorithm Postorder traversal:
+until all nodes are traversed −
+Step 1 − Recursively traverse left subtree.
+Step 2 − Recursively traverse right subtree.
+Step 3 − Visit root node.
+Conclusion : Thus we have studied the implementation of various Binary tree operations

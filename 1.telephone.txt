@@ -1,0 +1,166 @@
+Consider a telephone book database of N clients. Make use of a hash table implementation
+to quickly look up client‘s telephone number. Make use of two collision handling
+techniques and compare them using number of comparisons required to find a set of
+telephone numbers (Python) '''
+
+
+class Node:
+    def __init__(self, key, value):
+        self.key, self.value, self.next = key, value, None
+
+class ChainingHashTable:
+    def __init__(self, size):
+        self.size, self.table = size, [None] * size
+
+    def hash_function(self, key):
+        return hash(key) % self.size
+
+    def insert(self, key, value):
+        index, node = self.hash_function(key), Node(key, value)
+        if not self.table[index]:
+            self.table[index] = node
+        else:
+            current = self.table[index]
+            while current.next:
+                current = current.next
+            current.next = node  # Corrected here
+
+    def search(self, key):
+        index, comparisons = self.hash_function(key), 1
+        current = self.table[index]
+        while current:
+            if current.key == key:
+                return comparisons, current.value
+            current, comparisons = current.next, comparisons + 1
+        return comparisons, None
+
+class OpenAddressingHashTable:
+    def __init__(self, size):
+        self.size, self.table = size, [None] * size
+
+    def hash_function(self, key, attempt):
+        return (hash(key) + attempt) % self.size
+
+    def insert(self, key, value):
+        attempt = 0
+        while True:
+            index = self.hash_function(key, attempt)
+            if not self.table[index]:
+                self.table[index] = (key, value)
+                break
+            attempt += 1
+
+    def search(self, key):
+        attempt, comparisons = 0, 1
+        while True:
+            index = self.hash_function(key, attempt)
+            if not self.table[index]:
+                return comparisons, None
+            elif self.table[index][0] == key:
+                return comparisons, self.table[index][1]
+            attempt, comparisons = attempt + 1, comparisons + 1
+
+def main():
+    try:
+        size = int(input("Size of hash table: "))
+        if size <= 0:
+            raise ValueError("Size must be a positive integer")
+    except ValueError as e:
+        print(e)
+        return
+
+    chaining = ChainingHashTable(size)
+    open_addressing = OpenAddressingHashTable(size)
+
+    try:
+        n = int(input("Number of clients: "))
+        if n < 0:
+            raise ValueError("Number of clients must be non-negative")
+    except ValueError as e:
+        print(e)
+        return
+
+    for _ in range(n):
+        name, number = input("Client's name: "), input("Telephone number: ")
+        chaining.insert(name, number)
+        open_addressing.insert(name, number)
+
+    while True:
+        search_name = input("Client's name to search for (type 'exit' to quit): ").strip().lower()
+        if search_name == 'exit':
+            break
+        comp_chain, res_chain = chaining.search(search_name)
+        comp_open, res_open = open_addressing.search(search_name)
+        print(f"Chaining: {'Comparisons: ' + str(comp_chain) + ', Telephone Number: ' + res_chain if res_chain else search_name + ' not present, Comparisons: ' + str(comp_chain)}")
+        print(f"Open Addressing: {'Comparisons: ' + str(comp_open) + ', Telephone Number: ' + res_open if res_open else search_name + ' not present, Comparisons: ' + str(comp_open)}")
+
+if __name__ == "__main__":
+    main()
+
+
+
+
+
+
+Problem Statement: Consider telephone book database of N clients. Make use of a hash table
+implementation to quickly look up client‘s telephone number. Make use of two collision handling
+techniques.
+Objectives:
+1. To understand concept of Hashing
+2. To understand to find record quickly using hash function.
+3. To understand collision handling techniques.
+Software Requirements: Open Source Python
+Input: Name and telephone number of N users
+Output: Specific User data
+Theory:
+Hashing: Hashing is an important Data Structure which is designed to use a special function called the
+Hash function which is used to map a given value with a particular key for faster access of elements. The
+efficiency of mapping depends of the efficiency of the hash function used.
+Example: h(large_value) = large_value % m
+Here, h() is the required hash function and ‘m’ is the size of the hash table. For large values, hash
+functions produce value in a given range.
+Collision Handling
+If we know the keys beforehand, then we have can have perfect hashing. In perfect hashing, we do not
+have any collisions. However, If we do not know the keys, then we can use the following methods to
+avoid collisions:
+1. Chaining 2. Open Addressing (Linear Probing, Quadratic Probing, Double Hashing)
+Chaining
+While hashing, the hashing function may lead to a collision that is two or more keys are mapped to the
+same value. Chain hashing avoids collision. The idea is to make each cell of hash table point to a linked
+list of records that have same hash function value.
+Algorithm
+1. Declare an array of a linked list with the hash table size.
+2. Initialize an array of a linked list to NULL.
+3. Find hash key.
+4. If chain[key] == NULL
+ Make chain[key] points to the key node.
+5. Otherwise(collision),
+ Insert the key node at the end of the chain[key].
+Open addressing
+Linear Probing:
+In linear probing, the hash table is searched sequentially that starts from the original location of the
+hash. If in case the location that we get is already occupied, then we check for the next location.
+The function used for rehashing is as follows: rehash(key) = (n+1)%table-size.
+Algorithm:
+1. Calculate the hash key. i.e. key = data % size
+2. Check, if hashTable[key] is empty
+• store the value directly by hashTable[key] = data
+3. If the hash index already has some value then
+• check for next index using key = (key+1) % size
+4. Check, if the next index is available hashTable[key] then store the value. Otherwise try for next
+index.
+5. Do the above process till we find the space.
+Quadratic Probing
+Quadratic probing is a method with the help of which we can solve the problem of clustering that was
+discussed above. This method is also known as the mid-square method. In this method, we look for
+the i
+2
+‘th slot in the i
+th iteration. We always start from the original hash location. If only the location is
+occupied then we check the other slots.
+Double Hashing: The intervals that lie between probes are computed by another hash function.
+Double hashing is a technique that reduces clustering in an optimized way. In this technique, the
+increments for the probing sequence are computed by using another hash function. We use another
+hash function hash2(x) and look for the i*hash2(x) slot in the i
+th rotation.
+Conclusion: In this way we have implemented Hash table for quick lookup using Python.
